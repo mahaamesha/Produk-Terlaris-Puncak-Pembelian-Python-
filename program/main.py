@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 
 # Import data csv
 df = pd.read_csv('dataset.csv')
-
 # print(df.head()); print(df.tail())
+
 # print(df.shape)
 # print(df.columns)
 # print(df.info())
@@ -34,26 +34,39 @@ prod_terjual = pd.DataFrame(df.groupby('product').sum()['terjual'])
 prod_terjual.sort_values(by=['terjual'], inplace=True, ascending=False)
 print(prod_terjual[:5])
 
+last_month_mostSelling = pd.DataFrame(df.sort_values(by='date',ascending=True)
+            .set_index('date').last('1M')
+            .groupby(['product']).sum()['terjual']
+            )
+print(last_month_mostSelling)
+last_month_mostSelling.plot.bar()
+plt.xlabel('Product')
+plt.ylabel('Penjualan')
+plt.show(block=True)
+
+last_month_mostSelling.sort_values(by='terjual', inplace=True, ascending=False)
+print(last_month_mostSelling)
+
 """
 tes = pd.DataFrame(df.groupby(['product', 'date']).sum()['terjual'])
 print(tes)
 """
 
 # data penjualan satu bulan terakhir
-last_month = pd.DataFrame(df.sort_values(by='date',ascending=True)
+last_month_bestDate = pd.DataFrame(df.sort_values(by='date',ascending=True)
             .set_index('date').last('1M')
             .groupby(['date']).sum()['terjual']
             )
 
-last_month.plot(figsize=(14,7))
+last_month_bestDate.plot(figsize=(14,7))
 plt.xlabel('Tanggal')
 plt.ylabel('Penjualan')
 #plt.show()
 #print(last_month)
-last_month.sort_values(by='terjual', inplace=True, ascending=False)
+last_month_bestDate.sort_values(by='terjual', inplace=True, ascending=False)
 #print(last_month)
 print('Puncak pembelian pada')
-print(last_month[:1])
+print(last_month_bestDate[:1])
 #print('dengan ', last_month[1][0] , ' penjualan')
 
 
@@ -77,7 +90,7 @@ print(perhr_terjual[len(perhr_terjual)-30:])
 permg_terjual = pd.DataFrame(df.groupby(pd.Grouper(key='date', freq='7D')).sum()['terjual'])
 print(permg_terjual[len(permg_terjual)-4:])
 """
-##################################
+
 """
 from datetime import date, timedelta
 
